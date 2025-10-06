@@ -107,6 +107,9 @@ async function loadAgentDetails() {
             updateEmployeeTable();
             updateBookTable();
             updateTopPerformers();
+            
+            // CRITICAL: Update book revenue chart AFTER books data is loaded
+            updateBookRevenueChart();
         }
     } catch (error) {
         console.error('Error loading agent details:', error);
