@@ -150,7 +150,7 @@ function updateComprehensiveSummary() {
 }
 
 function updateKeyMetrics(latest) {
-    updateStatElement('final-revenue', `Rs.{(parseFloat(latest.total_revenue) || 0).toFixed(2)}`);
+    updateStatElement('final-revenue', `Rs. ${(parseFloat(latest.total_revenue) || 0).toFixed(2)}`);
     updateStatElement('final-books-sold', latest.books_sold || 0);
     updateStatElement('final-satisfaction', (parseFloat(latest.avg_customer_satisfaction) || 0).toFixed(2));
     updateStatElement('final-messages', latest.messages_processed || 0);
@@ -191,7 +191,7 @@ function updatePerformanceMetrics(latest) {
         </tr>
         <tr>
             <td><strong>Average Transaction Value</strong></td>
-            <td>Rs.{avgTransactionValue}</td>
+            <td>Rs. ${avgTransactionValue}</td>
         </tr>
     `;
     
@@ -379,9 +379,9 @@ function updateCustomerTable() {
             <tr>
                 <td>${customer.id || 'N/A'}</td>
                 <td>${customer.name || 'Unknown'}</td>
-                <td>Rs.{initialBudget.toFixed(2)}</td>
-                <td>Rs.{remainingBudget.toFixed(2)}</td>
-                <td>Rs.{totalSpent.toFixed(2)}</td>
+                <td>Rs. ${initialBudget.toFixed(2)}</td>
+                <td>Rs. ${remainingBudget.toFixed(2)}</td>
+                <td>Rs. ${totalSpent.toFixed(2)}</td>
                 <td>${customer.books_purchased || 0}</td>
                 <td>${(parseFloat(customer.satisfaction) || 0).toFixed(2)}</td>
                 <td><span class="badge ${loyaltyClass}">${customer.loyalty_level || 'New'}</span></td>
@@ -423,7 +423,7 @@ function updateEmployeeTable() {
                 <td>${employee.id || 'N/A'}</td>
                 <td>${employee.name || 'Unknown'}</td>
                 <td><span class="badge ${roleClass}">${employee.role || 'Staff'}</span></td>
-                <td>Rs.{(parseFloat(employee.salary) || 0).toFixed(2)}</td>
+                <td>Rs. ${(parseFloat(employee.salary) || 0).toFixed(2)}</td>
                 <td>${employee.interactions || 0}</td>
                 <td><span class="badge ${perfClass}">${performance}</span></td>
                 <td><span class="badge badge-success">Active</span></td>
@@ -458,7 +458,7 @@ function updateBookTable() {
                 <td>${book.title || 'Unknown'}</td>
                 <td>${book.author || 'Unknown'}</td>
                 <td>${book.genre || 'General'}</td>
-                <td>Rs.{(parseFloat(book.price) || 0).toFixed(2)}</td>
+                <td>Rs. ${(parseFloat(book.price) || 0).toFixed(2)}</td>
                 <td>${book.stock || 0}</td>
                 <td>${book.sales || 0}</td>
                 <td>${(parseFloat(book.avg_rating) || 0).toFixed(1)} â­</td>
@@ -485,7 +485,7 @@ function updateTopPerformers() {
                 <td>${index + 1}</td>
                 <td>${book.title || 'Unknown'}</td>
                 <td>${book.sales || 0}</td>
-                <td>Rs.{((book.price || 0) * (book.sales || 0)).toFixed(2)}</td>
+                <td>Rs. ${((book.price || 0) * (book.sales || 0)).toFixed(2)}</td>
             </tr>
         `).join('');
         
@@ -504,7 +504,7 @@ function updateTopPerformers() {
                 <td>${index + 1}</td>
                 <td>${customer.name || 'Unknown'}</td>
                 <td>${customer.books_purchased || 0}</td>
-                <td>Rs.{(parseFloat(customer.total_spent) || 0).toFixed(2)}</td>
+                <td>Rs. ${(parseFloat(customer.total_spent) || 0).toFixed(2)}</td>
             </tr>
         `).join('');
         
@@ -798,7 +798,7 @@ function updateBookRevenueChart() {
                 const revenue = price * sales;
                 
                 if (sales > 0) {
-                    console.log(`  ðŸ“– ${book.title}: Rs.{price.toFixed(2)} Ã— ${sales} = Rs.{revenue.toFixed(2)}`);
+                    console.log(`  ðŸ“– ${book.title}: Rs. ${price.toFixed(2)} Ã— ${sales} = Rs. ${revenue.toFixed(2)}`);
                 }
                 
                 return {
@@ -963,7 +963,7 @@ function exportPDF() {
         doc.setTextColor(0, 0, 0);
         const latest = summaryData.metrics[summaryData.metrics.length - 1];
         
-        doc.text(`Total Revenue: Rs.{(parseFloat(latest.total_revenue) || 0).toFixed(2)}`, 105, yPos, { align: 'center' });
+        doc.text(`Total Revenue: Rs. ${(parseFloat(latest.total_revenue) || 0).toFixed(2)}`, 105, yPos, { align: 'center' });
         yPos += 10;
         doc.text(`Books Sold: ${latest.books_sold || 0}`, 105, yPos, { align: 'center' });
         yPos += 10;
@@ -985,9 +985,9 @@ function exportPDF() {
         
         const summaryStats = [
             ['Simulation Steps', `${latest.step || 0}`],
-            ['Total Revenue', `Rs.{(parseFloat(latest.total_revenue) || 0).toFixed(2)}`],
+            ['Total Revenue', `Rs. ${(parseFloat(latest.total_revenue) || 0).toFixed(2)}`],
             ['Books Sold', `${latest.books_sold || 0}`],
-            ['Average Transaction Value', `Rs.{latest.books_sold > 0 ? ((latest.total_revenue || 0) / latest.books_sold).toFixed(2) : '0.00'}`],
+            ['Average Transaction Value', `Rs. ${latest.books_sold > 0 ? ((latest.total_revenue || 0) / latest.books_sold).toFixed(2) : '0.00'}`],
             ['Customer Satisfaction', `${(parseFloat(latest.avg_customer_satisfaction) || 0).toFixed(2)}`],
             ['Messages Processed', `${latest.messages_processed || 0}`],
             ['Active Customers', `${latest.active_customers || 0}`],
@@ -1055,7 +1055,7 @@ function exportPDF() {
                 }
                 
                 doc.text((customer.name || 'Unknown').substring(0, 20), leftMargin, yPos);
-                doc.text(`Rs.{(customer.budget || 0).toFixed(0)}`, leftMargin + 50, yPos);
+                doc.text(`Rs. ${(customer.budget || 0).toFixed(0)}`, leftMargin + 50, yPos);
                 doc.text(`${customer.books_purchased || 0}`, leftMargin + 80, yPos);
                 doc.text(`${(customer.satisfaction || 0).toFixed(2)}`, leftMargin + 110, yPos);
                 doc.text(`${customer.loyalty_level || 'New'}`, leftMargin + 150, yPos);
@@ -1097,7 +1097,7 @@ function exportPDF() {
                 
                 doc.text((employee.name || 'Unknown').substring(0, 20), leftMargin, yPos);
                 doc.text(`${employee.role || 'Staff'}`, leftMargin + 50, yPos);
-                doc.text(`Rs.{(employee.salary || 0).toFixed(0)}`, leftMargin + 90, yPos);
+                doc.text(`Rs. ${(employee.salary || 0).toFixed(0)}`, leftMargin + 90, yPos);
                 doc.text(`${employee.interactions || 0}`, leftMargin + 130, yPos);
                 doc.text(`${employee.performance || 'Good'}`, leftMargin + 165, yPos);
                 yPos += 6;
@@ -1140,7 +1140,7 @@ function exportPDF() {
                 
                 doc.text((book.title || 'Unknown').substring(0, 25), leftMargin, yPos);
                 doc.text(`${book.genre || 'N/A'}`, leftMargin + 60, yPos);
-                doc.text(`Rs.{(book.price || 0).toFixed(2)}`, leftMargin + 95, yPos);
+                doc.text(`Rs. ${(book.price || 0).toFixed(2)}`, leftMargin + 95, yPos);
                 doc.text(`${book.stock || 0}`, leftMargin + 120, yPos);
                 doc.text(`${book.sales || 0}`, leftMargin + 145, yPos);
                 doc.text(`${(book.avg_rating || 0).toFixed(1)}`, leftMargin + 170, yPos);
@@ -1375,7 +1375,7 @@ async function exportCSV() {
         
         const csvRows = [
             ['Metric', 'Value'],
-            ['Total Revenue', `Rs.{(parseFloat(latest.total_revenue) || 0).toFixed(2)}`],
+            ['Total Revenue', `Rs. ${(parseFloat(latest.total_revenue) || 0).toFixed(2)}`],
             ['Books Sold', latest.books_sold || 0],
             ['Customer Satisfaction', (parseFloat(latest.avg_customer_satisfaction) || 0).toFixed(2)],
             ['Messages Processed', latest.messages_processed || 0],
@@ -1405,7 +1405,7 @@ function exportExcel() {
         
         // Summary Sheet
         const summaryWS = XLSX.utils.json_to_sheet([{
-            'Total Revenue': `Rs.{(parseFloat(summaryData.metrics[summaryData.metrics.length - 1].total_revenue) || 0).toFixed(2)}`,
+            'Total Revenue': `Rs. ${(parseFloat(summaryData.metrics[summaryData.metrics.length - 1].total_revenue) || 0).toFixed(2)}`,
             'Books Sold': summaryData.metrics[summaryData.metrics.length - 1].books_sold || 0,
             'Customer Satisfaction': (parseFloat(summaryData.metrics[summaryData.metrics.length - 1].avg_customer_satisfaction) || 0).toFixed(2),
             'Messages Processed': summaryData.metrics[summaryData.metrics.length - 1].messages_processed || 0,
@@ -1595,4 +1595,5 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
 

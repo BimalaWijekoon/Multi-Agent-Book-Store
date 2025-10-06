@@ -260,7 +260,7 @@ function updateCustomerStats() {
     const avgBudget = customers.length > 0 
         ? customers.reduce((sum, c) => sum + (parseFloat(c.budget) || 0), 0) / customers.length 
         : 0;
-    updateStatElement('avg-budget', `Rs.{avgBudget.toFixed(2)}`);
+    updateStatElement('avg-budget', `Rs. ${avgBudget.toFixed(2)}`);
     
     // Average satisfaction
     const avgSatisfaction = customers.length > 0 
@@ -294,7 +294,7 @@ function updateBookStats() {
     const avgPrice = books.length > 0 
         ? books.reduce((sum, b) => sum + (parseFloat(b.price) || 0), 0) / books.length 
         : 0;
-    updateStatElement('avg-price', `Rs.{avgPrice.toFixed(2)}`);
+    updateStatElement('avg-price', `Rs. ${avgPrice.toFixed(2)}`);
     
     // Low stock count
     const lowStockCount = books.filter(b => (parseInt(b.stock) || 0) < 5).length;
