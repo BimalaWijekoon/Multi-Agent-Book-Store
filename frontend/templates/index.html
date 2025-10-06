@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookstore Simulation Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/" class="navbar-brand">
+                <span class="icon">📚</span>
+                <span>Bookstore MAS</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="/" class="active">Dashboard</a></li>
+                <li><a href="/graphs">📊 Graphs</a></li>
+                <li><a href="/agents">👥 Agents</a></li>
+                <li><a href="/rules">⚙️ Rules</a></li>
+                <li><a href="/messages">💬 Messages</a></li>
+                <li><a href="/ontology">🔗 Ontology</a></li>
+                <li><a href="/summary">📋 Summary</a></li>
+                <li><a href="/history">🕒 History</a></li>
+            </ul>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container" style="margin-top: 2rem;">
+        <!-- Stats Overview -->
+        <div class="grid grid-4 mb-3">
+            <div class="stat-card" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                <div class="stat-icon">👤</div>
+                <div class="stat-value" id="stat-customers">0</div>
+                <div class="stat-label">Active Customers</div>
+            </div>
+            <div class="stat-card" style="background: linear-gradient(135deg, #f093fb, #f5576c);">
+                <div class="stat-icon">👔</div>
+                <div class="stat-value" id="stat-employees">0</div>
+                <div class="stat-label">Employees</div>
+            </div>
+            <div class="stat-card" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">
+                <div class="stat-icon">💰</div>
+                <div class="stat-value" id="stat-revenue">$0.00</div>
+                <div class="stat-label">Total Revenue</div>
+            </div>
+            <div class="stat-card" style="background: linear-gradient(135deg, #43e97b, #38f9d7);">
+                <div class="stat-icon">📖</div>
+                <div class="stat-value" id="stat-books-sold">0</div>
+                <div class="stat-label">Books Sold</div>
+            </div>
+        </div>
+
+        <!-- Main Grid Layout -->
+        <div class="grid grid-2">
+            <!-- Control Panel -->
+            <div class="card animate-in">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <span>🎮</span>
+                        Simulation Control Panel
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <form id="simulationForm">
+                        <div class="form-group">
+                            <label class="form-label" for="num_customers">Number of Customers</label>
+                            <input type="number" class="form-input" id="num_customers" value="5" min="1" max="50">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="num_employees">Number of Employees</label>
+                            <input type="number" class="form-input" id="num_employees" value="2" min="1" max="20">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="num_books">Number of Books</label>
+                            <input type="number" class="form-input" id="num_books" value="20" min="1" max="100">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="num_steps">Simulation Steps</label>
+                            <input type="number" class="form-input" id="num_steps" value="30" min="1" max="500">
+                        </div>
+                        
+                        <div class="flex gap-2">
+                            <button type="submit" class="btn btn-primary w-full" id="startBtn">
+                                <span>▶️</span>
+                                Start Simulation
+                            </button>
+                            <button type="button" class="btn btn-danger" id="stopBtn" disabled>
+                                <span>⏹️</span>
+                                Stop
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <!-- Progress Bar -->
+                    <div class="mt-3" id="progressContainer" style="display: none;">
+                        <label class="form-label">Progress</label>
+                        <div class="progress">
+                            <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+                        </div>
+                        <div class="text-center mt-1">
+                            <span id="progressText">Step 0 / 0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Terminal Console -->
+            <div class="card animate-in">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <span>💻</span>
+                        Simulation Console
+                    </h2>
+                    <button class="btn btn-secondary" onclick="clearConsole()">Clear</button>
+                </div>
+                <div class="card-body">
+                    <div class="terminal">
+                        <div class="terminal-header">
+                            <span class="terminal-btn red"></span>
+                            <span class="terminal-btn yellow"></span>
+                            <span class="terminal-btn green"></span>
+                        </div>
+                        <div class="terminal-content" id="terminalContent">
+                            <div class="terminal-line info">🚀 Bookstore Multi-Agent Simulation Dashboard v1.0</div>
+                            <div class="terminal-line info">📡 Connected to WebSocket server</div>
+                            <div class="terminal-line success">✓ System ready. Configure parameters and start simulation.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Metrics Chart -->
+        <div class="card animate-in mt-3">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <span>📈</span>
+                    Live Metrics
+                </h2>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="liveMetricsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="grid grid-2 mt-3">
+            <div class="card animate-in">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <span>🔔</span>
+                        Recent Transactions
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div class="table-container">
+                        <table class="data-table" id="transactionsTable">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Customer</th>
+                                    <th>Book</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactionsBody">
+                                <tr>
+                                    <td colspan="4" class="text-center">No transactions yet</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card animate-in">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <span>⚡</span>
+                        Recent Rules Fired
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div class="table-container">
+                        <table class="data-table" id="rulesTable">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Rule</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rulesBody">
+                                <tr>
+                                    <td colspan="3" class="text-center">No rules fired yet</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

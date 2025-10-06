@@ -1,0 +1,31 @@
+# Core ontology and RDF libraries
+owlready2>=0.36
+rdflib>=6.2.0
+
+# Agent-based simulation framework
+mesa>=1.1.1
+
+# Data handling and visualization
+matplotlib>=3.5.1
+networkx>=2.8.4
+pandas>=1.5.2
+numpy>=1.22.3
+seaborn>=0.12.0
+plotly>=5.14.0
+
+# GUI frameworks and components
+# Tkinter is included in standard Python distribution
+pillow>=9.5.0  # For image handling in tkinter
+
+# Reporting and export
+fpdf>=1.7.2
+xlsxwriter>=3.0.3
+reportlab>=3.6.12
+jinja2>=3.1.2  # For report templates
+
+# PDF and reporting tools
+PyPDF2>=2.10.0
+weasyprint>=56.1  # For HTML to PDF conversion
+
+# Testing framework
+pytest>=7.0.0

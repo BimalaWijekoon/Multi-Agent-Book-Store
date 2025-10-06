@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graphs - Bookstore Simulation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/" class="navbar-brand">
+                <span class="icon">📚</span>
+                <span>Bookstore MAS</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="/">Dashboard</a></li>
+                <li><a href="/graphs" class="active">📊 Graphs</a></li>
+                <li><a href="/agents">👥 Agents</a></li>
+                <li><a href="/rules">⚙️ Rules</a></li>
+                <li><a href="/messages">💬 Messages</a></li>
+                <li><a href="/ontology">🔗 Ontology</a></li>
+                <li><a href="/summary">📋 Summary</a></li>
+                <li><a href="/history">🕒 History</a></li>
+            </ul>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container" style="margin-top: 2rem;">
+        <div class="card animate-in mb-3">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <span>📊</span>
+                    Analytics Dashboard
+                </h2>
+                <button class="btn btn-primary" onclick="refreshGraphs()">
+                    <span>🔄</span>
+                    Refresh
+                </button>
+            </div>
+            <div class="card-body">
+                <!-- Sub Navigation Tabs -->
+                <div class="chart-tabs">
+                    <button class="chart-tab active" data-tab="revenue">💰 Revenue Tracking</button>
+                    <button class="chart-tab" data-tab="agents">👥 Agent Tracking</button>
+                    <button class="chart-tab" data-tab="rules">⚙️ Rules Execution</button>
+                    <button class="chart-tab" data-tab="messages">💬 Message Throughput</button>
+                    <button class="chart-tab" data-tab="satisfaction">😊 Customer Satisfaction</button>
+                    <button class="chart-tab" data-tab="inventory">📦 Inventory Levels</button>
+                </div>
+
+                <!-- Revenue Tracking Tab -->
+                <div class="tab-content" id="revenue-tab">
+                    <div class="grid grid-2 mb-3">
+                        <div class="stat-card" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                            <div class="stat-icon">💵</div>
+                            <div class="stat-value" id="total-revenue">$0.00</div>
+                            <div class="stat-label">Total Revenue</div>
+                        </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, #f093fb, #f5576c);">
+                            <div class="stat-icon">📈</div>
+                            <div class="stat-value" id="avg-transaction">$0.00</div>
+                            <div class="stat-label">Avg Transaction</div>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                    <div class="chart-container mt-3">
+                        <canvas id="revenueByStepChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Agent Tracking Tab -->
+                <div class="tab-content" id="agents-tab" style="display: none;">
+                    <div class="grid grid-3 mb-3">
+                        <div class="stat-card" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">
+                            <div class="stat-icon">👤</div>
+                            <div class="stat-value" id="active-customers-count">0</div>
+                            <div class="stat-label">Active Customers</div>
+                        </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, #43e97b, #38f9d7);">
+                            <div class="stat-icon">👔</div>
+                            <div class="stat-value" id="active-employees-count">0</div>
+                            <div class="stat-label">Active Employees</div>
+                        </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, #fa709a, #fee140);">
+                            <div class="stat-icon">📚</div>
+                            <div class="stat-value" id="total-books-count">0</div>
+                            <div class="stat-label">Total Books</div>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="agentActivityChart"></canvas>
+                    </div>
+                    <div class="chart-container mt-3">
+                        <canvas id="bookStockChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Rules Execution Tab -->
+                <div class="tab-content" id="rules-tab" style="display: none;">
+                    <div class="grid grid-2 mb-3">
+                        <div class="stat-card" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                            <div class="stat-icon">⚡</div>
+                            <div class="stat-value" id="total-rules-executed">0</div>
+                            <div class="stat-label">Total Rules Executed</div>
+                        </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, #f093fb, #f5576c);">
+                            <div class="stat-icon">🔥</div>
+                            <div class="stat-value" id="most-fired-rule">-</div>
+                            <div class="stat-label">Most Fired Rule</div>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <h3 class="chart-title">Rules Execution Distribution</h3>
+                        <canvas id="rulesExecutionChart"></canvas>
+                    </div>
+                    <div class="chart-container mt-3">
+                        <canvas id="rulesTimelineChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Message Throughput Tab -->
+                <div class="tab-content" id="messages-tab" style="display: none;">
+                    <div class="grid grid-3 mb-3">
+                        <div class="stat-card" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">
+                            <div class="stat-icon">📨</div>
+                            <div class="stat-value" id="total-messages">0</div>
+                            <div class="stat-label">Total Messages</div>
+                        </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, #43e97b, #38f9d7);">
+                            <div class="stat-icon">✅</div>
+                            <div class="stat-value" id="processed-messages">0</div>
+                            <div class="stat-label">Processed</div>
+                        </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, #fa709a, #fee140);">
+                            <div class="stat-icon">⏱️</div>
+                            <div class="stat-value" id="avg-msg-rate">0</div>
+                            <div class="stat-label">Msgs/Step</div>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="messageThroughputChart"></canvas>
+                    </div>
+                    <div class="chart-container mt-3">
+                        <h3 class="chart-title">Message Types Distribution</h3>
+                        <canvas id="messageTypesChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Customer Satisfaction Tab -->
+                <div class="tab-content" id="satisfaction-tab" style="display: none;">
+                    <div class="grid grid-2 mb-3">
+                        <div class="stat-card" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                            <div class="stat-icon">😊</div>
+                            <div class="stat-value" id="avg-satisfaction">0.00</div>
+                            <div class="stat-label">Avg Satisfaction</div>
+                        </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, #f093fb, #f5576c);">
+                            <div class="stat-icon">⭐</div>
+                            <div class="stat-value" id="satisfaction-trend">-</div>
+                            <div class="stat-label">Trend</div>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <h3 class="chart-title">Customer Satisfaction Trend</h3>
+                        <canvas id="satisfactionChart"></canvas>
+                    </div>
+                    <div class="chart-container mt-3">
+                        <h3 class="chart-title">Satisfaction Distribution</h3>
+                        <canvas id="satisfactionDistributionChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Inventory Levels Tab -->
+                <div class="tab-content" id="inventory-tab" style="display: none;">
+                    <div class="grid grid-3 mb-3">
+                        <div class="stat-card" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">
+                            <div class="stat-icon">📦</div>
+                            <div class="stat-value" id="total-stock">0</div>
+                            <div class="stat-label">Total Stock</div>
+                        </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, #43e97b, #38f9d7);">
+                            <div class="stat-icon">📖</div>
+                            <div class="stat-value" id="books-sold-total">0</div>
+                            <div class="stat-label">Books Sold</div>
+                        </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, #fa709a, #fee140);">
+                            <div class="stat-icon">⚠️</div>
+                            <div class="stat-value" id="low-stock-count">0</div>
+                            <div class="stat-label">Low Stock Items</div>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="inventoryChart"></canvas>
+                    </div>
+                    <div class="chart-container mt-3">
+                        <canvas id="inventoryHistoryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <script src="{{ url_for('static', filename='js/graphs.js') }}"></script>
+</body>
+</html>

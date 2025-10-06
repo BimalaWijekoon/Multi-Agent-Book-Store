@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summary - Bookstore Simulation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/" class="navbar-brand">
+                <span class="icon">📚</span>
+                <span>Bookstore MAS</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="/">Dashboard</a></li>
+                <li><a href="/graphs">📊 Graphs</a></li>
+                <li><a href="/agents">👥 Agents</a></li>
+                <li><a href="/rules">⚙️ Rules</a></li>
+                <li><a href="/messages">💬 Messages</a></li>
+                <li><a href="/ontology">🔗 Ontology</a></li>
+                <li><a href="/summary" class="active">📋 Summary</a></li>
+                <li><a href="/history">🕒 History</a></li>
+            </ul>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+        </div>
+    </nav>
+
+    <div class="container" style="margin-top: 2rem;">
+        <!-- Summary Header -->
+        <div class="card animate-in mb-3">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <span>📋</span>
+                    Simulation Summary Report
+                </h2>
+                <button class="btn btn-primary" onclick="refreshSummary()">
+                    <span>🔄</span>
+                    Refresh
+                </button>
+            </div>
+            <div class="card-body">
+                <div id="summaryHeader" class="text-center mb-3">
+                    <h3 id="summaryTitle">Latest Simulation Results</h3>
+                    <p id="summaryTimestamp" class="text-secondary"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Metrics -->
+        <div class="grid grid-4 mb-3">
+            <div class="stat-card" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                <div class="stat-icon">💰</div>
+                <div class="stat-value" id="final-revenue">$0.00</div>
+                <div class="stat-label">Total Revenue</div>
+            </div>
+            <div class="stat-card" style="background: linear-gradient(135deg, #f093fb, #f5576c);">
+                <div class="stat-icon">📖</div>
+                <div class="stat-value" id="final-books-sold">0</div>
+                <div class="stat-label">Books Sold</div>
+            </div>
+            <div class="stat-card" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">
+                <div class="stat-icon">😊</div>
+                <div class="stat-value" id="final-satisfaction">0.00</div>
+                <div class="stat-label">Avg Satisfaction</div>
+            </div>
+            <div class="stat-card" style="background: linear-gradient(135deg, #43e97b, #38f9d7);">
+                <div class="stat-icon">📨</div>
+                <div class="stat-value" id="final-messages">0</div>
+                <div class="stat-label">Messages Processed</div>
+            </div>
+        </div>
+
+        <!-- Export Section -->
+        <div class="card animate-in mb-3">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <span>💾</span>
+                    Export Report
+                </h2>
+            </div>
+            <div class="card-body">
+                <p class="mb-2">Download complete simulation data in your preferred format:</p>
+                <div class="export-section">
+                    <button class="export-btn" onclick="exportPDF()">
+                        <span>📄</span>
+                        Export as PDF
+                    </button>
+                    <button class="export-btn" onclick="exportJSON()">
+                        <span>📝</span>
+                        Export as JSON
+                    </button>
+                    <button class="export-btn" onclick="exportExcel()">
+                        <span>📊</span>
+                        Export as Excel
+                    </button>
+                    <button class="export-btn" onclick="exportCSV()">
+                        <span>📋</span>
+                        Export as CSV
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Statistics -->
+        <div class="grid grid-2">
+            <div class="card animate-in">
+                <div class="card-header">
+                    <h3 class="card-title">📊 Performance Metrics</h3>
+                </div>
+                <div class="card-body">
+                    <table class="data-table">
+                        <tbody id="performanceMetrics">
+                            <tr><td colspan="2">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card animate-in">
+                <div class="card-header">
+                    <h3 class="card-title">⚙️ Rules Statistics</h3>
+                </div>
+                <div class="card-body">
+                    <table class="data-table">
+                        <tbody id="rulesStatistics">
+                            <tr><td colspan="2">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="card animate-in mt-3">
+            <div class="card-header">
+                <h3 class="card-title">📈 Summary Charts</h3>
+            </div>
+            <div class="card-body">
+                <div class="grid grid-2">
+                    <div class="chart-container">
+                        <canvas id="summaryRevenueChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="summaryRulesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Performance Charts -->
+        <div class="card animate-in mt-3">
+            <div class="card-header">
+                <h3 class="card-title">📊 Detailed Performance Analytics</h3>
+            </div>
+            <div class="card-body">
+                <div class="grid grid-2 mb-3">
+                    <div class="chart-container">
+                        <canvas id="agentActivityChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="messageDistributionChart"></canvas>
+                    </div>
+                </div>
+                <div class="grid grid-2">
+                    <div class="chart-container">
+                        <canvas id="bookRevenueChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="satisfactionTrendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ontology Statistics -->
+        <div class="card animate-in mt-3">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <span>🔗</span>
+                    Ontology Statistics
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="grid grid-3 mb-3">
+                    <div class="stat-card" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                        <div class="stat-icon">📦</div>
+                        <div class="stat-value" id="ontology-classes">0</div>
+                        <div class="stat-label">Classes Instantiated</div>
+                    </div>
+                    <div class="stat-card" style="background: linear-gradient(135deg, #f093fb, #f5576c);">
+                        <div class="stat-icon">🔗</div>
+                        <div class="stat-value" id="ontology-properties">0</div>
+                        <div class="stat-label">Properties Used</div>
+                    </div>
+                    <div class="stat-card" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">
+                        <div class="stat-icon">🌐</div>
+                        <div class="stat-value" id="ontology-relationships">0</div>
+                        <div class="stat-label">Relationships Created</div>
+                    </div>
+                </div>
+                <table class="detail-table">
+                    <thead>
+                        <tr>
+                            <th>Entity Type</th>
+                            <th>Count</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ontologyDetailsTable">
+                        <tr><td colspan="3" style="text-align: center;">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Customer Details -->
+        <div class="card animate-in mt-3">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <span>👥</span>
+                    Customer Details
+                </h3>
+                <div class="card-header-actions">
+                    <input type="text" id="customerSearchInput" placeholder="Search customers..." 
+                           style="padding: 0.5rem; border-radius: var(--radius-sm); border: 1px solid var(--glass-border); background: var(--bg-tertiary); color: var(--text-primary);">
+                </div>
+            </div>
+            <div class="card-body">
+                <div style="overflow-x: auto;">
+                    <table class="detail-table">
+                        <thead>
+                            <tr>
+                                <th>Customer ID</th>
+                                <th>Name</th>
+                                <th>Initial Budget</th>
+                                <th>Remaining Budget</th>
+                                <th>Total Spent</th>
+                                <th>Books Purchased</th>
+                                <th>Satisfaction</th>
+                                <th>Loyalty Level</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customerDetailsTable">
+                            <tr><td colspan="8" style="text-align: center;">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination-controls" id="customerPagination" style="display: none; margin-top: 1rem;">
+                    <button class="pagination-btn" onclick="prevCustomerPage()">← Previous</button>
+                    <span id="customerPageInfo" style="margin: 0 1rem;">Page 1</span>
+                    <button class="pagination-btn" onclick="nextCustomerPage()">Next →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Employee Details -->
+        <div class="card animate-in mt-3">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <span>👔</span>
+                    Employee Details
+                </h3>
+                <div class="card-header-actions">
+                    <input type="text" id="employeeSearchInput" placeholder="Search employees..." 
+                           style="padding: 0.5rem; border-radius: var(--radius-sm); border: 1px solid var(--glass-border); background: var(--bg-tertiary); color: var(--text-primary);">
+                </div>
+            </div>
+            <div class="card-body">
+                <div style="overflow-x: auto;">
+                    <table class="detail-table">
+                        <thead>
+                            <tr>
+                                <th>Employee ID</th>
+                                <th>Name</th>
+                                <th>Role</th>
+                                <th>Salary</th>
+                                <th>Interactions</th>
+                                <th>Performance</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="employeeDetailsTable">
+                            <tr><td colspan="7" style="text-align: center;">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination-controls" id="employeePagination" style="display: none; margin-top: 1rem;">
+                    <button class="pagination-btn" onclick="prevEmployeePage()">← Previous</button>
+                    <span id="employeePageInfo" style="margin: 0 1rem;">Page 1</span>
+                    <button class="pagination-btn" onclick="nextEmployeePage()">Next →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Book Details -->
+        <div class="card animate-in mt-3">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <span>📚</span>
+                    Book Inventory Details
+                </h3>
+                <div class="card-header-actions">
+                    <input type="text" id="bookSearchInput" placeholder="Search books..." 
+                           style="padding: 0.5rem; border-radius: var(--radius-sm); border: 1px solid var(--glass-border); background: var(--bg-tertiary); color: var(--text-primary);">
+                    <select id="genreFilter" style="padding: 0.5rem; border-radius: var(--radius-sm); border: 1px solid var(--glass-border); background: var(--bg-tertiary); color: var(--text-primary); margin-left: 0.5rem;">
+                        <option value="">All Genres</option>
+                        <option value="Fiction">Fiction</option>
+                        <option value="Science">Science</option>
+                        <option value="History">History</option>
+                        <option value="Technology">Technology</option>
+                        <option value="Fantasy">Fantasy</option>
+                    </select>
+                </div>
+            </div>
+            <div class="card-body">
+                <div style="overflow-x: auto;">
+                    <table class="detail-table">
+                        <thead>
+                            <tr>
+                                <th>Book ID</th>
+                                <th>Title</th>
+                                <th>Author</th>
+                                <th>Genre</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th>Sales</th>
+                                <th>Avg Rating</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookDetailsTable">
+                            <tr><td colspan="8" style="text-align: center;">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination-controls" id="bookPagination" style="display: none; margin-top: 1rem;">
+                    <button class="pagination-btn" onclick="prevBookPage()">← Previous</button>
+                    <span id="bookPageInfo" style="margin: 0 1rem;">Page 1</span>
+                    <button class="pagination-btn" onclick="nextBookPage()">Next →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Performers -->
+        <div class="grid grid-2 mt-3">
+            <div class="card animate-in">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <span>🏆</span>
+                        Top Performing Books
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <table class="detail-table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Title</th>
+                                <th>Sales</th>
+                                <th>Revenue</th>
+                            </tr>
+                        </thead>
+                        <tbody id="topBooksTable">
+                            <tr><td colspan="4" style="text-align: center;">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card animate-in">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <span>⭐</span>
+                        Top Customers
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <table class="detail-table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Customer</th>
+                                <th>Purchases</th>
+                                <th>Total Spent</th>
+                            </tr>
+                        </thead>
+                        <tbody id="topCustomersTable">
+                            <tr><td colspan="4" style="text-align: center;">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SWRL Rules Execution Details -->
+        <div class="card animate-in mt-3">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <span>⚙️</span>
+                    SWRL Rules Execution Details
+                </h3>
+            </div>
+            <div class="card-body">
+                <table class="detail-table">
+                    <thead>
+                        <tr>
+                            <th>Rule Name</th>
+                            <th>Executions</th>
+                            <th>Success Rate</th>
+                            <th>Avg Time (ms)</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rulesExecutionTable">
+                        <tr><td colspan="5" style="text-align: center;">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Detailed Configuration -->
+        <div class="card animate-in mt-3">
+            <div class="card-header">
+                <h3 class="card-title">📝 Simulation Configuration</h3>
+            </div>
+            <div class="card-body">
+                <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius-md);">
+                    <pre id="configDetails" style="margin: 0; white-space: pre-wrap;">Loading configuration...</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='js/summary.js') }}"></script>
+</body>
+</html>

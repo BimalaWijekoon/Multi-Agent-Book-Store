@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages - Bookstore Simulation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/" class="navbar-brand">
+                <span class="icon">📚</span>
+                <span>Bookstore MAS</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="/">Dashboard</a></li>
+                <li><a href="/graphs">📊 Graphs</a></li>
+                <li><a href="/agents">👥 Agents</a></li>
+                <li><a href="/rules">⚙️ Rules</a></li>
+                <li><a href="/messages" class="active">💬 Messages</a></li>
+                <li><a href="/ontology">🔗 Ontology</a></li>
+                <li><a href="/summary">📋 Summary</a></li>
+                <li><a href="/history">🕒 History</a></li>
+            </ul>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+        </div>
+    </nav>
+
+    <div class="container" style="margin-top: 2rem;">
+        <div class="card animate-in">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <span>💬</span>
+                    Message Communication Log
+                </h2>
+                <div class="flex gap-2">
+                    <input type="text" id="searchInput" class="form-input" placeholder="Search messages..." style="width: 300px;">
+                    <select id="typeFilter" class="form-input" style="width: 200px;">
+                        <option value="">All Types</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="refreshMessages()">
+                        <span>🔄</span>
+                        Refresh
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="grid grid-3 mb-3">
+                    <div class="stat-card" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                        <div class="stat-icon">📨</div>
+                        <div class="stat-value" id="total-messages">0</div>
+                        <div class="stat-label">Total Messages</div>
+                    </div>
+                    <div class="stat-card" style="background: linear-gradient(135deg, #f093fb, #f5576c);">
+                        <div class="stat-icon">📋</div>
+                        <div class="stat-value" id="unique-types">0</div>
+                        <div class="stat-label">Message Types</div>
+                    </div>
+                    <div class="stat-card" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-value" id="avg-per-step-msg">0</div>
+                        <div class="stat-label">Avg per Step</div>
+                    </div>
+                </div>
+
+                <div id="messagesContainer" style="max-height: 700px; overflow-y: auto;"></div>
+                <div class="pagination" id="pagination"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='js/messages.js') }}"></script>
+</body>
+</html>
