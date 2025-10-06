@@ -82,7 +82,7 @@ socket.on('simulation_complete', (summary) => {
     document.getElementById('stopBtn').disabled = true;
     addConsoleLog('🎉 Simulation completed!', 'success');
     if (summary.final_metrics) {
-        addConsoleLog(`📊 Final Revenue: $${summary.final_metrics.total_revenue}`, 'info');
+        addConsoleLog(`📊 Final Revenue: Rs. ${summary.final_metrics.total_revenue}`, 'info');
         addConsoleLog(`📖 Books Sold: ${summary.final_metrics.books_sold}`, 'info');
     }
 });
@@ -157,7 +157,7 @@ document.getElementById('simulationForm').addEventListener('submit', async (e) =
 function updateMetrics(metrics) {
     document.getElementById('stat-customers').textContent = metrics.active_customers || 0;
     document.getElementById('stat-employees').textContent = metrics.active_employees || 0;
-    document.getElementById('stat-revenue').textContent = `$${(metrics.total_revenue || 0).toFixed(2)}`;
+    document.getElementById('stat-revenue').textContent = `Rs. ${(metrics.total_revenue || 0).toFixed(2)}`;
     document.getElementById('stat-books-sold').textContent = metrics.books_sold || 0;
 }
 
@@ -206,7 +206,7 @@ function addTransactionRow(transaction) {
         <td>Step ${transaction.step}</td>
         <td>${transaction.customer || 'Unknown'}</td>
         <td>${transaction.book || 'Unknown'}</td>
-        <td>$${(transaction.price || 0).toFixed(2)}</td>
+        <td>Rs. ${(transaction.price || 0).toFixed(2)}</td>
     `;
     
     // Keep only last 10
