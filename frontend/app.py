@@ -579,7 +579,7 @@ def run_simulation_background(num_customers, num_employees, num_books, num_steps
                     available_books = [b for b in books if b.stock_level > 0]
                     if available_books:
                         book = model.random.choice(available_books)
-                        if customer.budget >= book.price:
+                        if customer.current_budget >= book.price:
                             # Customer uses their browse_books and purchase_book methods
                             if hasattr(customer, 'browse_books') and hasattr(customer, 'purchase_book'):
                                 book_info = [{
@@ -613,7 +613,7 @@ def run_simulation_background(num_customers, num_employees, num_books, num_steps
                             content={
                                 'request_type': 'recommendation',
                                 'preferred_genres': getattr(customer, 'preferred_genres', []),
-                                'budget': getattr(customer, 'budget', 0.0)
+                                'budget': getattr(customer, 'current_budget', 0.0)
                             }
                         )
             
