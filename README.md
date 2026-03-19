@@ -94,6 +94,7 @@ The web interface provides multiple views:
 - **⚙️ Rules**: SWRL rule execution logs
 - **💬 Messages**: Inter-agent communication history
 - **📋 Summary**: Final reports and export options
+- **ℹ️ About**: Project overview and technology highlights
 
 ### Running Command-Line Simulation
 

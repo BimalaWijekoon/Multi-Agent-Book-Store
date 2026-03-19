@@ -1043,6 +1043,11 @@ def summary():
     """Simulation summary page"""
     return render_template('summary.html')
 
+@app.route('/about')
+def about():
+    """About page"""
+    return render_template('about.html')
+
 
 # ============ API ENDPOINTS ============
 
@@ -1361,4 +1366,3 @@ if __name__ == '__main__':
     print("="*60 + "\n")
     
     socketio.run(app, debug=True, host='0.0.0.0', port=5000)
-

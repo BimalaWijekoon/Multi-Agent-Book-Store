@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Bookstore Simulation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/" class="navbar-brand">
+                <span class="icon">📚</span>
+                <span>Bookstore MAS</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="/">Dashboard</a></li>
+                <li><a href="/graphs">📊 Graphs</a></li>
+                <li><a href="/agents">👥 Agents</a></li>
+                <li><a href="/rules">⚙️ Rules</a></li>
+                <li><a href="/messages">💬 Messages</a></li>
+                <li><a href="/ontology">🔗 Ontology</a></li>
+                <li><a href="/summary">📋 Summary</a></li>
+                <li><a href="/history">🕒 History</a></li>
+                <li><a href="/about" class="active">ℹ️ About</a></li>
+            </ul>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+        </div>
+    </nav>
+
+    <div class="container" style="margin-top: 2rem;">
+        <div class="card animate-in">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <span>ℹ️</span>
+                    About This Project
+                </h2>
+            </div>
+            <div class="card-body">
+                <p class="mb-2">
+                    The <strong>Multi-Agent Book Store</strong> is a simulation platform that models interactions between customers, employees, and books in a bookstore environment.
+                </p>
+                <p class="mb-2">
+                    It combines:
+                </p>
+                <ul class="mb-3" style="margin-left: 1.25rem;">
+                    <li>Multi-agent simulation with Mesa</li>
+                    <li>Ontology-based reasoning with Owlready2 and SWRL rules</li>
+                    <li>A Flask + WebSocket dashboard for real-time monitoring</li>
+                    <li>Sri Lankan localization for books, pricing, and scenarios</li>
+                </ul>
+                <p class="mb-0">
+                    Use the dashboard pages to configure simulations, monitor metrics live, review messages and rule execution, and analyze summary outcomes.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+</body>
+</html>
